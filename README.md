@@ -31,7 +31,9 @@ python -m venv meu_ambiente
 source venv/bin/activate   # No Windows: venv\Scripts\activate
 ````
 4) Instale as dependências:
-   
+PARA INSTALAMENTO GERAL USE:
+````pip install -r requirements.txt````
+
 As dependências necessárias para o funcionamento do código são:
 winotify: Para mostrar notificações no Windows.
   - Instalação: ````pip install winotify````
