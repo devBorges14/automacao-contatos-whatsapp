@@ -94,6 +94,12 @@ git clone https://github.com/devBorges14/automacao-contatos-whatsapp.git
 2) Instale as dependências:
 ````pip install -r requirements.txt````
 
+3) Configurar o ````chromedriver.exe:````
+O código está configurado para usar o ````chromedriver.exe````, que é o driver do navegador Chrome para o Selenium. Certifique-se de que o caminho para o chromedriver.exe esteja correto e que a versão do driver seja compatível com a versão do seu navegador Chrome.
+Baixe o ChromeDriver adequado para sua versão do Chrome em: https://sites.google.com/chromium.org/driver/
+Coloque o chromedriver.exe no diretório especificado ou ajuste o caminho no código, caso necessário.
+
 3) Execute o programa:
+- Abra o terminal na pasta onde o arquivo SimpleGUI.py está localizado
 ````python SimpleGUI.py````
 
