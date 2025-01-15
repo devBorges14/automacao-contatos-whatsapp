@@ -1,0 +1,5 @@
+winotify
+pandas
+selenium
+openpyxl
+emoji
