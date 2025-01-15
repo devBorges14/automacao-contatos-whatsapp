@@ -86,3 +86,14 @@ Garantir que o caminho do chromedriver seja configurável.
 Verificar se o diretório de dados do usuário está correto.
 Garantir que as dependências estejam instaladas corretamente.
 Instruir o usuário a configurar o ambiente corretamente (como o Python, versões de bibliotecas e permissões de acesso).
+
+# Como Rodar
+1) Clone o repositório:
+git clone https://github.com/devBorges14/automacao-contatos-whatsapp.git
+
+2) Instale as dependências:
+````pip install -r requirements.txt````
+
+3) Execute o programa:
+````python SimpleGUI.py````
+
