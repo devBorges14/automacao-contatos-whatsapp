@@ -48,6 +48,16 @@ emoji: Para manipular e processar emojis em textos.
 tkinter: Para criar interfaces gráficas (GUI). Geralmente já está incluído com a instalação padrão do Python.
 Além disso, o código utiliza módulos internos do Python, como ````os````, ````datetime````, ````filedialog````, ````messagebox````, ````urllib.parse```` e outros.
 
+5) Verefique se a planilha está com o formato certo (caso necessite alteração está na linha 53 à 59):
+nome	telefone	endereco	dia	hora	cliente
+João Silva	5511963082543	Rua das flores	2024-12-25	14:00:00	Miguel
+Maria	5511963082543	Praça Miguel Ortega	2024-11-10	08:00:00	Silvia
+Gabriel	5511963082543	Alvezedo Lima	2025-01-13	16:00:00	José
+![image](https://github.com/user-attachments/assets/2acf9566-0547-4030-8313-b37ed86c274a)
+
+6) Verifique se o número está no formato Brasileiro = 5511*********
+
+
 # ERROS que podem acontecer
 
 1. Caminho do chromedriver
@@ -102,4 +112,8 @@ Coloque o chromedriver.exe no diretório especificado ou ajuste o caminho no có
 3) Execute o programa:
 - Abra o terminal na pasta onde o arquivo SimpleGUI.py está localizado
 ````python SimpleGUI.py````
+4) Localize a planilha (planilha.xlsx) IMPORTANTE que o aquivo tenha números válidos
+![image](https://github.com/user-attachments/assets/250f9dee-89f3-41ca-a908-b00601d6587b)
+
+
 
