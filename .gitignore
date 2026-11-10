@@ -1,0 +1,9 @@
+# Sessões de login do WhatsApp (NUNCA subir para o GitHub)
+Interface/whatsapp_session*/
+# Registros com telefones de contatos
+Interface/registros/
+__pycache__/
+*.pyc
+chromedriver*
+.venv/
+venv/
