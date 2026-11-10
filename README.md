@@ -1,108 +1,60 @@
 # Automacao de envio de mensagens
 
-Este programa automatiza o envio de mensagens personalizadas pelo WhatsApp WEB sem a necessidade de serviços externos pagos. Ele lê uma planilha Excel contendo números de telefone e mensagens, integrando-se ao WhatsApp Web para enviar mensagens diretamente aos destinatários.
+Este programa automatiza o envio de mensagens personalizadas pelo WhatsApp WEB sem a necessidade de serviços externos pagos. Ele lê uma planilha (Excel, CSV ou link do Google Sheets) contendo números de telefone e mensagens, integrando-se ao WhatsApp Web para enviar mensagens diretamente aos destinatários.
+
+## Novidades da versão 2026
+- **Não precisa mais baixar o ChromeDriver**: o Selenium 4 baixa o driver certo sozinho (Selenium Manager).
+- Funciona com **Google Chrome ou Microsoft Edge** (usa o Chrome se tiver; senão, o Edge que já vem no Windows).
+- O navegador abre **uma vez só** e o login (QR Code) fica salvo para as próximas vezes.
+- Aceita **link do Google Sheets** direto na tela, além de `.xlsx` e `.csv`.
+- Lê as colunas pelo **nome do cabeçalho**, então a ordem das colunas não importa.
+- Coloca o **55** automaticamente nos telefones (`11966437073` → `5511966437073`).
+- **Não manda duas vezes** para o mesmo número (`Interface/registros/enviados.csv`).
+- **Modo teste**: abre cada conversa com o texto pronto, mas não envia.
+- **Intervalo aleatório** entre mensagens, **limite por vez** e botão **Parar**.
+- Detecta **número sem WhatsApp** e registra em `Interface/registros/erros.csv`.
+- A tela não trava mais durante o envio e mostra o andamento.
 
 ## Tecnologias:
-- Python
-- winotify
-- datetime
-- os
-- tkinter
-- filedialog
-- messagebox
-- pandas
-- selenium
-- selenium.webdriver
-- openpyxl
-- urllib.parse
+- Python 3.10+
+- tkinter (interface)
+- selenium 4 (WhatsApp Web)
+- pandas + openpyxl (planilha)
 - emoji
-- selenium.webdriver.chrome.options
-- selenium.webdriver.chrome.service
+- winotify (notificações no Windows)
 
 ## PRÉ-REQUISITOS
 
-### 1) Instale Python 3  
+### 1) Instale Python 3
 [Download do Python](https://www.python.org/downloads/)
 
-### 2) Instale Chrome Driver na pasta do arquivo  
-[Baixar ChromeDriver](https://developer.chrome.com/docs/chromedriver/downloads?hl=pt-br)  
-[Tutorial do Jonathan da Dev Aprender](https://www.youtube.com/watch?v=Ot10qzrb13c)
+### 2) Tenha o Google Chrome ou o Microsoft Edge instalado
+Não é mais preciso baixar o ChromeDriver nem colocar nada na pasta.
 
-- <a href="https://www.selenium.dev/documentation/webdriver/troubleshooting/errors/driver_location/">Documentação de ERROS possíveis do ChromeDriver<a>
-### 3) Use um ambiente virtual:
-Crie um ambiente virtual para gerenciar dependências e evitar problemas de configuração:
+### 3) Use um ambiente virtual (recomendado):
 ```bash
-python -m venv meu_ambiente
-source venv/bin/activate   # No Windows: venv\Scripts\activate
+python -m venv venv
+venv\Scripts\activate        # No Linux/Mac: source venv/bin/activate
 ```
 
 ### 4) Instale as dependências:
-Para instalar todas as dependências de uma vez, use:
 ```bash
 pip install -r requirements.txt
 ```
 
-As dependências necessárias para o funcionamento do código são:
+### 5) Formato da planilha
+A primeira linha precisa ter os nomes das colunas. Obrigatórias: **Telefone** e **Mensagem personalizada**.
+As outras são usadas no log e nos registros. Exemplo:
 
-- **winotify**: Para mostrar notificações no Windows.
-  - Instalação: `pip install winotify`
-- **pandas**: Para manipulação de dados em formato de tabela (DataFrame).
-  - Instalação: `pip install pandas`
-- **selenium**: Para automação de navegadores, utilizado para interação com sites.
-  - Instalação: `pip install selenium`
-- **openpyxl**: Para ler e escrever arquivos Excel (.xlsx).
-  - Instalação: `pip install openpyxl`
-- **emoji**: Para manipular e processar emojis em textos.
-  - Instalação: `pip install emoji`
-- **tkinter**: Para criar interfaces gráficas (GUI). Geralmente já está incluído na instalação padrão do Python.
+| Lead | Nome | Endereço | Telefone | Tipo de comercio | Tem site? | Site | Mensagem personalizada |
+|---|---|---|---|---|---|---|---|
+| 1 | Filipi Garage | Estr. São Francisco, 618... | 11966437073 | Oficina | NÃO | | Olá, tudo bem? Sou o Gabriel... |
 
-Além disso, o código utiliza módulos internos do Python, como `os`, `datetime`, `filedialog`, `messagebox`, `urllib.parse`, entre outros.
+- Nomes aceitos para cada coluna (maiúsculas e acentos não importam): veja `COLUNAS` no começo do `Interface/app.py`.
+- Telefone com ou sem 55, com ou sem parênteses e traço. Linhas sem telefone válido ou sem mensagem são puladas.
+- Pode usar emojis direto no texto ou códigos como `:smile:`. Quebras de linha também funcionam.
+- **Google Sheets**: compartilhe como "Qualquer pessoa com o link" (leitor) e cole o link na tela.
 
-### 5) Verifique se a planilha está no formato correto:
-Caso precise ajustar, o formato correto está entre as linhas 53 e 59 do código:
-```plaintext
-nome         telefone       endereco               dia         hora        cliente
-João Silva  5511963082543  Rua das flores        2024-12-25  14:00:00   Miguel
-Maria        5511963082543  Praça Miguel Ortega  2024-11-10  08:00:00   Silvia
-Gabriel      5511963082543  Alvezedo Lima        2025-01-13  16:00:00   José
-```
-
-### 6) Verifique se os números estão no formato correto:
-Formato Brasileiro: `5511*********`
-
----
-
-## Possíveis Erros e Soluções
-
-### 1. Caminho do ChromeDriver
-**Problema**: O caminho especificado para o `chromedriver.exe` pode não ser válido no sistema do usuário, resultando em erro de "chromedriver not found".  
-**Solução**: Certifique-se de que o caminho está correto e ajuste-o conforme necessário.
-
-### 2. Diretório de dados do usuário (user-data-dir)
-**Problema**: O Chrome pode não encontrar ou ter permissões para o diretório especificado.  
-**Solução**: Ajuste o código para usar um diretório genérico.
-```python
-chrome_options.add_argument(f"user-data-dir={os.path.join(os.getenv('APPDATA'), 'whatsapp_session')}")
-```
-
-### 3. Versão do ChromeDriver e do Google Chrome
-**Problema**: O ChromeDriver precisa ser compatível com a versão do Chrome instalado.  
-**Solução**: Baixe a versão correta do ChromeDriver conforme o navegador.
-
-### 4. Dependências não instaladas
-**Problema**: O usuário pode não ter todas as bibliotecas necessárias.  
-**Solução**: Rode novamente:
-```bash
-pip install -r requirements.txt
-```
-
-### 5. Problema com o arquivo Excel
-**Problema**: Se a planilha não estiver formatada corretamente, o código pode falhar.  
-**Solução**: Verifique se as colunas e dados estão corretos antes de rodar o script.
-
-### 6. WhatsApp Web alterou sua interface
-**Problema**: O WhatsApp Web pode mudar sua estrutura, fazendo com que o código pare de funcionar.  
-**Solução**: Atualize o código regularmente para se adaptar às mudanças.
 ---
 
 ## Como Rodar
@@ -117,20 +69,62 @@ git clone https://github.com/devBorges14/automacao-contatos-whatsapp.git
 pip install -r requirements.txt
 ```
 
-### 3) Configurar o ChromeDriver:
-Baixe o ChromeDriver adequado para sua versão do Chrome em:
-[Baixar ChromeDriver](https://sites.google.com/chromium.org/driver/)
-
-Coloque o `chromedriver.exe` no diretório especificado ou ajuste o caminho no código, caso necessário.
-
-### 4) Execute o programa:
-Abra o terminal na pasta onde o arquivo `SimpleGUI.py` está localizado e execute:
+### 3) Execute o programa:
 ```bash
+cd Interface
 python SimpleGUI.py
 ```
 
-### 5) Selecione a planilha com os contatos:
-Certifique-se de que o arquivo contém números válidos e está no formato correto antes de iniciar o envio das mensagens.
+### 4) Na tela
+1. Clique em **Selecionar planilha** ou cole o **link do Google Sheets**.
+2. Ajuste **Máx. por vez** e o **intervalo** entre mensagens.
+3. Deixe **Modo teste** marcado na primeira vez: ele abre cada conversa com o texto, sem enviar.
+4. Clique em **Processar**. Na primeira vez, escaneie o QR Code do WhatsApp Web com o celular.
+5. Para enviar de verdade, desmarque **Modo teste** e processe de novo.
+
+Não mexa no navegador enquanto o programa trabalha. O botão **Registros** abre a pasta com
+`enviados.csv` e `erros.csv`. Para reenviar a alguém, apague a linha dele do `enviados.csv`.
+
+---
+
+## Cuidados (leia antes de usar)
+- O WhatsApp **não permite automação** em contas comuns e pode **banir o número** se perceber envio em massa,
+  muitas mensagens para quem não tem você salvo, ou muitas denúncias de spam.
+- Use **lotes pequenos** (ex.: 15 a 30 por dia) e **intervalos longos**. Os padrões do programa já são conservadores.
+- Mande só para quem faz sentido receber, sempre com uma forma fácil de recusar ("se não for do seu interesse, é só me avisar"),
+  e respeite quem pedir para parar.
+- Prefira um número comercial/secundário, não o seu número pessoal principal.
+- Telefones fixos (ex.: `1136891375`) só funcionam se a empresa usar WhatsApp Business nesse número; senão vão para `erros.csv`.
+
+---
+
+## Possíveis Erros e Soluções
+
+### 1. "Não consegui abrir nenhum navegador"
+**Solução**: instale o Google Chrome ou o Microsoft Edge. Para forçar um deles, mude `NAVEGADOR` no começo do `Interface/app.py` (`"chrome"` ou `"edge"`).
+
+### 2. Pede o QR Code toda vez / erro de perfil em uso
+**Problema**: o login fica salvo em `Interface/whatsapp_session` (ou `whatsapp_session_edge`). Se outra janela do programa estiver aberta, o perfil fica bloqueado.
+**Solução**: feche todas as janelas abertas pelo programa e tente de novo.
+
+### 3. Dependências não instaladas
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Problema com a planilha
+**Problema**: "A planilha precisa das colunas ['telefone', 'mensagem']".
+**Solução**: confira os nomes do cabeçalho na primeira linha ou acrescente o nome que você usa em `COLUNAS` no `app.py`.
+
+### 5. Link do Google Sheets não abre
+**Solução**: no Google Sheets, clique em Compartilhar → "Qualquer pessoa com o link" → Leitor.
+
+### 6. WhatsApp Web alterou sua interface
+**Problema**: o WhatsApp Web pode mudar a página, e o programa para de achar a caixa de texto ou o botão de enviar.
+**Solução**: ajuste os seletores `SEL_...` no começo do `Interface/app.py`.
+
+### 7. Segurança
+As pastas `whatsapp_session*` guardam o login do seu WhatsApp e `registros/` guarda telefones. As duas estão no `.gitignore`: **nunca** suba essas pastas para o GitHub.
 
 ---
 
@@ -140,4 +134,3 @@ Se você deseja contribuir com melhorias, sinta-se à vontade para:
 - Criar um **pull request** com novos recursos ou correções.
 
 Obrigado por utilizar este projeto! 🚀
-

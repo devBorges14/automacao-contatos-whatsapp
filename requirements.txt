@@ -1,5 +1,5 @@
-winotify
-pandas
-selenium
-openpyxl
-emoji
+selenium>=4.52
+pandas>=2.2
+openpyxl>=3.1
+emoji>=2.14
+winotify>=1.1; sys_platform == "win32"
